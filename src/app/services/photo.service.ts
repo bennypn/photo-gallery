@@ -133,7 +133,7 @@ export class PhotoService {
     });
   }
 
-  public async loadSaved(): Promise<void> {
+  public async loadSaved() {
     // Retrieve cached photo array data
     const { value } = await Preferences.get({ key: this.PHOTO_STORAGE });
     this.photos = (value ? JSON.parse(value) : []) as UserPhoto[];
@@ -149,16 +149,8 @@ export class PhotoService {
           directory: Directory.Data,
         });
 
-        let photoData: string;
-        if (typeof readFile.data === 'string') {
-          photoData = readFile.data;
-        } else {
-          // For web, readFile.data will be a Blob
-          photoData = await this.convertBlobToBase64(readFile.data);
-        }
-
         // Web platform only: Load the photo as base64 data
-        photo.webviewPath = `data:image/jpeg;base64,${photoData}`;
+        photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
       }
     }
   }
